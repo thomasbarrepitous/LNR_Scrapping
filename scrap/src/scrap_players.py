@@ -77,12 +77,11 @@ def scrap_player_lnr(browser: WebDriver, df: DataFrame) -> DataFrame:
     players_list = players_list_area.find_elements_by_tag_name('li')
 
     # For each players' personal pages link
-    for player in players_list:
+    for player in tqdm(players_list):
         player_link = player.find_element_by_tag_name('a').get_attribute('href')
         # Extract player info
-        df = df.append(get_player_info(browser, player_link).__dict__, ignore_index=True)
-        return df
-
+        df = df.concat(get_player_info(browser, player_link).__dict__, ignore_index=True)
+    return df
 
 def get_player_info(browser: WebDriver, player_link: str) -> Player:
     """ Get an individual player's infos from his detail page. """
